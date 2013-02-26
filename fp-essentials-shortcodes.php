@@ -29,7 +29,7 @@ class FPNEWShortCodes {
         add_shortcode('loggedin', array($this, 'loggedin_user_message'));
         
         // non loggedin users
-        add_shortcode('non_loggedin', array($this,'non_logged_user_message'));
+        add_shortcode('non-loggedin', array($this,'non_logged_user_message'));
         add_shortcode('visitor', array($this,'non_logged_user_message'));
         
         //show current site/Blog url
@@ -45,18 +45,18 @@ class FPNEWShortCodes {
         //show post url
         add_shortcode('posturl', array($this,'posturl'));
         add_shortcode('postlink',array($this,'postlink'));
-        add_shortcode('total_posts',array($this,'total_posts'));
-        add_shortcode('draft_posts', array($this,'draft_posts'));
+        add_shortcode('total-posts',array($this,'total_posts'));
+        add_shortcode('draft-posts', array($this,'draft_posts'));
          
         //No of users
-        add_shortcode('total_users',array($this,'total_users'));
+        add_shortcode('total-users',array($this,'total_users'));
        
         //Comments.
         add_shortcode('comments',array($this,'comments'));
         add_shortcode('moderated',array($this,'moderated_comments'));
         add_shortcode('approved',array($this,'approved_comments'));
         //show particular post comments
-        add_shortcode('post_comments',array($this,'post_comments'));
+        add_shortcode('post-comments',array($this,'post_comments'));
         
         //admin url
         add_shortcode('adminurl',array($this,'adminurl'));
@@ -189,6 +189,7 @@ class FPNEWShortCodes {
     * @return type
     */
     function blogurl($atts) {
+        
 	extract(shortcode_atts(array(
             "id" => '',
             "temp" => false,
@@ -274,7 +275,6 @@ class FPNEWShortCodes {
     /**
      * Show total usres
      * 
-     * @global type $fp_options
      * @return type
      */
     function total_users($atts,$content=null) {
@@ -297,7 +297,6 @@ class FPNEWShortCodes {
      /**
       * Show total posts
       * 
-      * @global type $fp_options
       * @return type
       */
     function total_posts($atts,$content=null) {
