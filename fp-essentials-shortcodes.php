@@ -74,7 +74,7 @@ class FPNEWShortCodes {
         
         //recent comments
         add_shortcode('recent-posts',array($this,'recent_posts'));
-        add_shortcode('recent-comments',array($this,'recent_comments'));
+     
     }
     /**
      * Get Instance
