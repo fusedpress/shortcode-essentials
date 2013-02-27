@@ -8,7 +8,7 @@
  * Version:1.0
  * Description:  The Shortcode Library for FusedPress Themes
  */
-define('FPNEW_SHORT_CODES_DIR_PATH', plugin_dir_path(__FILE__));
+define('FP_ESSENTIALS_SHORTCODES_DIR_PATH', plugin_dir_path(__FILE__));
 
 class FPNEWShortCodes {
     
@@ -18,9 +18,9 @@ class FPNEWShortCodes {
   
         //register shortcodes
         $this->register_shortcodes();
-
+  
     }
-
+   
     /**
      * Register  shortcodes
      * 
@@ -33,6 +33,7 @@ class FPNEWShortCodes {
         // non loggedin users
         add_shortcode('non-loggedin', array($this,'non_logged_user_message'));
         add_shortcode('visitor', array($this,'non_logged_user_message'));
+      
         
         //show current site/Blog url
         add_shortcode('siteurl',array($this,'siteurl'));
@@ -57,11 +58,13 @@ class FPNEWShortCodes {
         add_shortcode('comments',array($this,'comments'));
         add_shortcode('moderated',array($this,'moderated_comments'));
         add_shortcode('approved',array($this,'approved_comments'));
+        
         //show particular post comments
         add_shortcode('post-comments',array($this,'post_comments'));
         
         //admin url
         add_shortcode('adminurl',array($this,'adminurl'));
+        add_shortcode( 'author-meta', array($this,'author_meta') ); 
         
         //Network url/link
         add_shortcode('networkhomeurl',array($this,'network_home_url'));
@@ -72,8 +75,9 @@ class FPNEWShortCodes {
         
         //recent comments
         add_shortcode('recent-posts',array($this,'recent_posts'));
+        add_shortcode('recent-comments',array($this,'recent_comments'));
     }
-       /**
+    /**
      * Get Instance
      * 
      * Use singlten patteren
@@ -90,6 +94,8 @@ class FPNEWShortCodes {
 
     /**
      * Loggedin User Message
+     * 
+     * [loggedin]Text message......[/loggedin]
      * 
      * @param type $atts an associative array of attributes, or an empty string if no attributes are given
      * @param type $content the enclosed content 
@@ -112,6 +118,8 @@ class FPNEWShortCodes {
     /**
      * Non Loggedin User Message
      * 
+     *[non-loggedin]Text message......[/non-loggedin]
+     * 
      * @param type $atts an associative array of attributes, or an empty string if no attributes are given
      * @param type $content the enclosed content 
      * @return String 
@@ -128,30 +136,16 @@ class FPNEWShortCodes {
             return '<div  class="' . esc_attr($class) . '">' . $content . '</div>';
         }
     }
-    /**
-     * User Access Capability
-     * 
-     * @param type $atts
-     * @param type $content
-     * @return string 
-     */
-   public function  user_access_capability($atts,$content=null){
-       extract( shortcode_atts( array( 'capability' => 'subscriber' ), $atts ) );
-
-	if ( current_user_can( $capability ) && !is_null( $content ) && !is_feed() )
-		return '<div>'. $content.'</div>';
-
-	return 'Sorry, but you cannot access this content without... permission';
-
-        
-    }
+    
    /**
-     * Show Current Site/Blog Url
+    * Show Current Site/Blog Url
     * 
-     * @param type $atts
-     * @param type $content
-     * @return string 
-     */
+    * [siteurl]
+    * 
+    * @param type $atts
+    * @param type $content
+    * @return string 
+    */
     public function siteurl($atts,$content=null){
     
        extract(shortcode_atts(array(
@@ -167,6 +161,9 @@ class FPNEWShortCodes {
     /**
      * Show site/blog name
      * 
+     * [bloginfo]
+     * [sitename]
+     * 
      * @return type
      */
       public function bloginfo( $atts,$content=null ) {
@@ -181,7 +178,9 @@ class FPNEWShortCodes {
     /**
      * Show Post Url
      * 
-     * @param type $attributes
+     * [posturl id=""]
+     * 
+     * @param type $attsibutes
      * @return type
      */
   public function posturl($atts,$content=null){
@@ -200,6 +199,9 @@ class FPNEWShortCodes {
     }
    /**
     * Show blog/page url
+    * 
+    * [blogurl]
+    * [pageurl]
     * 
     * @param type $atts
     * @return type
@@ -222,7 +224,9 @@ class FPNEWShortCodes {
 		
     }
      /**
-     * Post Link [postlink pid="1038" ]post link[/postlink]
+     * Post Link
+     * 
+     * [postlink pid="1038" ]post link[/postlink]
      * 
      * @param type $atts
      * @param type $content
@@ -255,14 +259,14 @@ class FPNEWShortCodes {
     }
         
     /**
-     * Page link 
-        
-     * [pagelink pageid="6"]Page link[/pagelink]
-     * 
-     * @param type $atts
-     * @param type $content
-     * @return string
-     */
+    * Page link 
+    *   
+    * [pagelink pageid="6"]Page link[/pagelink]
+    * 
+    * @param type $atts
+    * @param type $content
+    * @return string
+    */
    public function pagelink($atts,$content=null){
           extract(shortcode_atts(array(
                     'class' => 'page-link',
@@ -291,6 +295,8 @@ class FPNEWShortCodes {
     /**
      * Show total usres
      * 
+     * [total-users]
+     * 
      * @return type
      */
    public function total_users($atts,$content=null) {
@@ -310,12 +316,14 @@ class FPNEWShortCodes {
     
     
     }
-     /**
-      * Show total posts
-      * 
-      * @return type
-      */
-   public function total_posts($atts,$content=null) {
+   /**
+    * Show total posts
+    * 
+    * [total-posts]
+    * 
+    * @return type
+    */
+     public function total_posts($atts,$content=null) {
         
         extract(shortcode_atts(array(
                     'class' => 'total-posts',
@@ -325,13 +333,13 @@ class FPNEWShortCodes {
         
         return '<div  class="' . esc_attr($class) . '">'.'Total  posts &nbsp; &nbsp;'.  $count_posts->publish. '</div>';
         
-    }
+        }
     /**
-     * Total Posts(Drafts)
-     * 
-     * @return type
-     */
-   public function draft_posts($atts,$content=null){
+    * Total Posts(Drafts)
+    * 
+    * @return type
+    */
+    public function draft_posts($atts,$content=null){
         
         extract(shortcode_atts(array(
                     'class' => 'total-draft-posts',
@@ -343,11 +351,11 @@ class FPNEWShortCodes {
         return '<div  class="' . esc_attr($class) . '">' . 'Total drafts posts &nbsp; &nbsp;' . $count_drafts->draft . '</div>';
     }
     /**
-     * Total Comments
-     * 
-     * @global type $fp_options
-     * @return type
-     */
+    * Total Comments
+    * 
+    * @global type $fp_options
+    * @return type
+    */
     public function comments($atts,$content=null){
         
           extract(shortcode_atts(array(
@@ -358,16 +366,17 @@ class FPNEWShortCodes {
         $count_comments = wp_count_comments();
         
         return '<div  class="' . esc_attr($class) . '">' . 'Total Comments on this site is &nbsp; &nbsp;' . $count_comments->total_comments . '</div>';
-
     }
     /**
-     * post comment 
-     * 
-     * show particular comments on a single post
-     * [post_comments id=""]
-     * @param type $atts
-     * @return type
-     */
+    * post comment 
+    * 
+    * show particular comments on a single post
+    * 
+    * [post_comments id=""]
+    * 
+    * @param type $atts
+    * @return type
+    */
    public function post_comments($atts){
         extract(shortcode_atts(array(
                     'id' => ''
@@ -386,10 +395,10 @@ class FPNEWShortCodes {
 
     }
     /**
-     * Total comments(Moderates)
-     * 
-     * @return type
-     */
+    * Total comments(Moderates)
+    * 
+    * @return type
+    */
    public function moderated_comments($atts,$content=null){
         
           extract(shortcode_atts(array(
@@ -403,11 +412,10 @@ class FPNEWShortCodes {
          
     }
     /**
-     * Total comments(approved)
-     * 
-     * @return type
-     */
-    
+    * Total comments(approved)
+    * 
+    * @return type
+    */
    public function approved_comments ($atts,$content=null){
         
          extract(shortcode_atts(array(
@@ -431,73 +439,72 @@ class FPNEWShortCodes {
         extract(shortcode_atts(array(
                     'path' => '',
                     'class'=>'admin-url',
-                    'scheme' => 'admin'
                         ), $atts));
-        return '<div  class="' . esc_attr($class) . '">'  .admin_url( $path, $scheme ). '</div>'; 
+        return '<div  class="' . esc_attr($class) . '">'.'Admin Url &nbsp;'  .admin_url( $path). '</div>'; 
   	    
     }
     /**
-     * Network home url
-     * 
-     * @param type $atts
-     * @return type
-     */
+    * Network home url
+    * 
+    * @param type $atts
+    * @return type
+    */
    public function network_home_url($atts){
         extract( shortcode_atts( array(
     		'path' => '',
                 'class'=>'network-home',
-    		'scheme' => null
+    		
     	), $atts ) );
         
-     return '<div  class="' . esc_attr($class) . '">'  .network_home_url( $path, $scheme ). '</div>'; 
+     return '<div  class="' . esc_attr($class) . '">' .'Network Url &nbsp;' .network_home_url( $path ). '</div>'; 
     
         
     }
     /**
-     * logout url
-     * 
-     * @param type $atts
-     * @return type
-     */
+    * logout url
+    * 
+    * @param type $atts
+    * @return type
+    */
    public function logout_url($atts){
         
             extract(shortcode_atts(array(
                     'class' => 'logout-url',
                         ), $atts));
 
-        return '<div  class="' . esc_attr($class) . '">'  . wp_logout_url(home_url()). '</div>';
+        return '<div  class="' . esc_attr($class) . '">'.'Logout Url &nbsp;'  . wp_logout_url(home_url()). '</div>';
   
     }
     /**
-     * login url
-     * 
-     * @param type $atts
-     * @return type
-     */
+    * login url
+    * 
+    * @param type $atts
+    * @return type
+    */
     public function login_url($atts){
         
             extract(shortcode_atts(array(
                     'class' => 'login-url',
                         ), $atts));
-        return '<div  class="' . esc_attr($class) . '">' . wp_login_url(home_url()) . '</div>';
+        return '<div  class="' . esc_attr($class) . '">' .'Login Url &nbsp;'. wp_login_url(home_url()) . '</div>';
     }
     /**
-     * Recent posts
-     * 
-     * @param type $atts
-     * @return type
-     */
+    * Recent posts
+    * 
+    * @param type $atts
+    * @return type
+    */
    public function recent_posts($atts){
         
         $query = new WP_Query(
-                        array('orderby' => 'date', 'posts_per_page' => '4')
+                        array('orderby' => 'date', 'posts_per_page' => '5')
         );
 
         $list = '<ul class="recent-posts">';
 
         while ($query->have_posts()) : $query->the_post();
 
-            $list .= '<li>' . get_the_date() . '<a href="' . get_permalink() . '">' . get_the_title() . '</a>' . '<br />' . get_the_excerpt() . '</li>';
+            $list .= '<li>' . get_the_date() . '<a href="' . get_permalink() . '">' . get_the_title() . '</a>' . '<br />' . '</li>';
 
         endwhile;
 
@@ -505,7 +512,12 @@ class FPNEWShortCodes {
 
         return $list . '</ul>';
     }
+    
+    public function recent_comments($atts,$content=null){
+     
 
+    }
+  
 }
 
 FPNEWShortCodes::get_instance();
