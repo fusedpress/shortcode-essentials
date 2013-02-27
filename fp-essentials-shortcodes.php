@@ -64,7 +64,6 @@ class FPNEWShortCodes {
         
         //admin url
         add_shortcode('adminurl',array($this,'adminurl'));
-        add_shortcode( 'author-meta', array($this,'author_meta') ); 
         
         //Network url/link
         add_shortcode('networkhomeurl',array($this,'network_home_url'));
@@ -472,7 +471,7 @@ class FPNEWShortCodes {
                     'class' => 'logout-url',
                         ), $atts));
 
-        return '<div  class="' . esc_attr($class) . '">'.'Logout Url &nbsp;'  . wp_logout_url(home_url()). '</div>';
+        return  wp_logout_url(home_url());
   
     }
     /**
@@ -486,7 +485,7 @@ class FPNEWShortCodes {
             extract(shortcode_atts(array(
                     'class' => 'login-url',
                         ), $atts));
-        return '<div  class="' . esc_attr($class) . '">' .'Login Url &nbsp;'. wp_login_url(home_url()) . '</div>';
+        return  wp_login_url(home_url()) ;
     }
     /**
     * Recent posts
