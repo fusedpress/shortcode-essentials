@@ -35,11 +35,12 @@ class FPNEWShortCodes {
         add_shortcode('visitor', array($this,'non_logged_user_message'));
       
         
-        //show current site/Blog url
+        //show current site/Blog
         add_shortcode('siteurl',array($this,'siteurl'));
         add_shortcode('sitename',array($this,'bloginfo'));
         add_shortcode('bloginfo',array($this,'bloginfo'));
         add_shortcode('blogurl', array($this,'blogurl'));
+        add_shortcode('link-to-blog',array($this,'link_to_blog'));
         
         //Page url/link
         add_shortcode('pageurl',array($this,'blogurl'));
@@ -64,6 +65,8 @@ class FPNEWShortCodes {
         
         //admin url
         add_shortcode('adminurl',array($this,'adminurl'));
+        add_shortcode('userurl',array($this,'user_url'));
+        add_shortcode('userlink',array($this,'user_link'));
         
         //Network url/link
         add_shortcode('networkhomeurl',array($this,'network_home_url'));
@@ -221,6 +224,22 @@ class FPNEWShortCodes {
 		}
                 return '<div  class="' . esc_attr($class) . '">' .get_bloginfo('url'). '</div>';
 		
+    }
+    /**
+     * Link To Blog
+     * 
+     * [link-to-blog]
+     * 
+     * @param type $atts
+     * @return type
+     */
+    public function link_to_blog($atts){
+        extract(shortcode_atts(array(
+                    'id' => '',
+                    'class' => 'lonk-to-blog'
+                        ), $atts));
+        //$blog_id = 1;
+         return '<div  class="' . esc_attr($class) . '">' . 'Blog '.$id.' is called '.get_blog_option( $id, 'siteurl ' ). '</div>';  
     }
      /**
      * Post Link
@@ -438,9 +457,43 @@ class FPNEWShortCodes {
         extract(shortcode_atts(array(
                     'path' => '',
                     'class'=>'admin-url',
+                    'scheme' => 'admin'
                         ), $atts));
-        return '<div  class="' . esc_attr($class) . '">'.'Admin Url &nbsp;'  .admin_url( $path). '</div>'; 
+        return '<div  class="' . esc_attr($class) . '">'.'Admin Url &nbsp;'  .admin_url( $path,$scheme). '</div>'; 
   	    
+    }
+    /**
+     * user url
+     * 
+     * [userurl]
+     * 
+     * @param type $atts
+     * @return type
+     */
+    public function user_url($atts){
+        extract(shortcode_atts(array(
+            'id'=>'',
+            'class'=>'user-url',
+            
+        ),$atts));
+         return '<div  class="' . esc_attr($class) . '">'.'Usre Url &nbsp;'  .bp_core_get_user_domain( $id ). '</div>'; 
+       
+    }
+    /**
+     * User links
+     * 
+     * [userlink]
+     * 
+     * @param type $atts
+     * @return type
+     */
+    public function user_link($atts){
+           extract(shortcode_atts(array(
+                    'id' => '',
+                    'class' => 'user-link',
+                        ), $atts));
+           
+        return '<div  class="' . esc_attr($class) . '">'.'Usre Link &nbsp;'  .bp_core_get_userlink( $id ). '</div>'; 
     }
     /**
     * Network home url
@@ -452,10 +505,11 @@ class FPNEWShortCodes {
         extract( shortcode_atts( array(
     		'path' => '',
                 'class'=>'network-home',
+              'scheme' => null
     		
     	), $atts ) );
         
-     return '<div  class="' . esc_attr($class) . '">' .'Network Url &nbsp;' .network_home_url( $path ). '</div>'; 
+     return '<div  class="' . esc_attr($class) . '">' .'Network Url &nbsp;' .network_home_url( $path , $scheme ). '</div>'; 
     
         
     }
