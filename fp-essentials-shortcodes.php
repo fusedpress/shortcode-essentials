@@ -75,7 +75,7 @@ class FPNEWShortCodes {
         add_shortcode('logout-url',array($this,'logout_url'));
         add_shortcode('login-url',array($this,'login_url'));
         
-        //recent comments
+        //recent posts
         add_shortcode('recent-posts',array($this,'recent_posts'));
      
     }
@@ -566,10 +566,7 @@ class FPNEWShortCodes {
         return $list . '</ul>';
     }
     
-    public function recent_comments($atts,$content=null){
-     
-
-    }
+ 
   
 }
 
