@@ -46,9 +46,11 @@ class FPNEWShortCodes {
         add_shortcode('pageurl',array($this,'blogurl'));
         add_shortcode('pagelink',array($this,'pagelink'));
         
-        //show post url
+        //show post url/link
         add_shortcode('posturl', array($this,'posturl'));
         add_shortcode('postlink',array($this,'postlink'));
+        
+        //total post & draft posts
         add_shortcode('total-posts',array($this,'total_posts'));
         add_shortcode('draft-posts', array($this,'draft_posts'));
          
@@ -65,13 +67,15 @@ class FPNEWShortCodes {
         
         //admin url
         add_shortcode('adminurl',array($this,'adminurl'));
+        
+        //user url/link
         add_shortcode('userurl',array($this,'user_url'));
         add_shortcode('userlink',array($this,'user_link'));
         
-        //Network url/link
+        //Network url
         add_shortcode('networkhomeurl',array($this,'network_home_url'));
         
-        //login /logout url & link
+        // login /logout url
         add_shortcode('logout-url',array($this,'logout_url'));
         add_shortcode('login-url',array($this,'login_url'));
         
@@ -157,7 +161,7 @@ class FPNEWShortCodes {
         if ($id != '') {
             return get_permalink($id);
         }
-         return '<div  class="' . esc_attr($class) . '">' . get_bloginfo('url') . '</div>';
+         return '<div  class="' . esc_attr($class) . '">'.'Site Url:&nbsp;' . get_bloginfo('url') . '</div>';
        
     }
     /**
@@ -174,7 +178,7 @@ class FPNEWShortCodes {
                     "id" => '',
                     'class' => 'blog-info'), $atts));
            
-            return '<div  class="' . esc_attr($class) . '">' . get_bloginfo( $atts ) . '</div>';
+            return '<div  class="' . esc_attr($class) . '">'.'Blog Info: &nbsp;' . get_bloginfo( $atts ) . '</div>';
  
     }
     /**
@@ -195,7 +199,7 @@ class FPNEWShortCodes {
         $post_id = intval($atts['id']);
         $return_posturl = get_permalink($post_id);
         
-        return '<div  class="' . esc_attr($class) . '">' . $return_posturl . '</div>';
+        return '<div  class="' . esc_attr($class) . '">' .'Post Url: &nbsp;'. $return_posturl . '</div>';
    
         
     }
@@ -203,7 +207,7 @@ class FPNEWShortCodes {
     * Show blog/page url
     * 
     * [blogurl]
-    * [pageurl]
+    * [pageurl id=""]
     * 
     * @param type $atts
     * @return type
@@ -228,7 +232,7 @@ class FPNEWShortCodes {
     /**
      * Link To Blog
      * 
-     * [link-to-blog]
+     * [link-to-blog id="3"]
      * 
      * @param type $atts
      * @return type
@@ -239,7 +243,7 @@ class FPNEWShortCodes {
                     'class' => 'lonk-to-blog'
                         ), $atts));
         //$blog_id = 1;
-         return '<div  class="' . esc_attr($class) . '">' . 'Blog '.$id.' is called '.get_blog_option( $id, 'siteurl ' ). '</div>';  
+         return '<div  class="' . esc_attr($class) . '">' . 'Blog id. &nbsp; '.$id.' Name is called: &nbsp; '.get_blog_option( $id, 'siteurl ' ). '</div>';  
     }
      /**
      * Post Link
@@ -273,7 +277,7 @@ class FPNEWShortCodes {
             $content = get_the_title($pid);
         }
 
-        return '<div><a href="' . $permalink . '" class="' . esc_attr($class) . '">' . $content . '</a>'.'</div>';
+        return '<div>Post link: &nbsp;<a href="' . $permalink . '" class="' . esc_attr($class) . '">' . $content . '</a>'.'</div>';
     }
         
     /**
@@ -307,7 +311,7 @@ class FPNEWShortCodes {
             $content = get_the_title($pageid);
         }
 
-        return '<div><a href="' . $permalink . '" class="' . esc_attr($class) . '">' . $content . '</a>'.'</div>';
+        return '<div>Page Link: &nbsp;<a href="' . $permalink . '" class="' . esc_attr($class) . '">' . $content . '</a>'.'</div>';
      
     }
     /**
@@ -349,11 +353,13 @@ class FPNEWShortCodes {
 
         $count_posts = wp_count_posts();
         
-        return '<div  class="' . esc_attr($class) . '">'.'Total  posts &nbsp; &nbsp;'.  $count_posts->publish. '</div>';
+        return '<div  class="' . esc_attr($class) . '">'.'Total  posts: &nbsp; &nbsp;'.  $count_posts->publish. '</div>';
         
         }
     /**
     * Total Posts(Drafts)
+    * 
+    *[draft-posts] 
     * 
     * @return type
     */
@@ -366,12 +372,12 @@ class FPNEWShortCodes {
         //count draft posts.................. :)
         $count_drafts = wp_count_posts();
         
-        return '<div  class="' . esc_attr($class) . '">' . 'Total drafts posts &nbsp; &nbsp;' . $count_drafts->draft . '</div>';
+        return '<div  class="' . esc_attr($class) . '">' . 'Total drafts posts: &nbsp; &nbsp;' . $count_drafts->draft . '</div>';
     }
     /**
     * Total Comments
     * 
-    * @global type $fp_options
+    * [comments]
     * @return type
     */
     public function comments($atts,$content=null){
@@ -390,12 +396,12 @@ class FPNEWShortCodes {
     * 
     * show particular comments on a single post
     * 
-    * [post_comments id=""]
+    * [post-comments id=""]
     * 
     * @param type $atts
     * @return type
     */
-   public function post_comments($atts){
+      public function post_comments($atts){
         extract(shortcode_atts(array(
                     'id' => ''
                         ), $atts));
@@ -409,15 +415,17 @@ class FPNEWShortCodes {
         endif;
         $permalink = get_permalink($post_id);
 
-        return '<div><a href="'. $permalink . '" class="comments_link">' . $post . '</a>'.'</div>';
+        return '<div>Total comments on this posts: &nbsp;<a href="'. $permalink . '" class="comments_link">' . $post . '</a>'.'</div>';
 
     }
     /**
     * Total comments(Moderates)
     * 
+    * [moderated]
+    * 
     * @return type
     */
-   public function moderated_comments($atts,$content=null){
+     public function moderated_comments($atts,$content=null){
         
           extract(shortcode_atts(array(
                     'class' => 'moderated-comments',
@@ -426,15 +434,17 @@ class FPNEWShortCodes {
           //count moderated comments............. :)
           $count_moderated=  wp_count_comments();
           
-           return '<div  class="' . esc_attr($class) . '">' . 'Total moderated Comments &nbsp; &nbsp;' . $count_moderated->moderated . '</div>';
+           return '<div  class="' . esc_attr($class) . '">' . 'Total moderated Comments: &nbsp; &nbsp;' . $count_moderated->moderated . '</div>';
          
     }
     /**
     * Total comments(approved)
     * 
+    * [approved]
+    * 
     * @return type
     */
-   public function approved_comments ($atts,$content=null){
+    public function approved_comments ($atts,$content=null){
         
          extract(shortcode_atts(array(
                     'class' => 'draft-comments',
@@ -448,29 +458,29 @@ class FPNEWShortCodes {
     }
     /**
      * Admin Url
-     * 
+     * [adminurl]
      * @param type $atts
      * @return type
      */
-   public function adminurl($atts){
+     public function adminurl($atts){
         
         extract(shortcode_atts(array(
                     'path' => '',
                     'class'=>'admin-url',
                     'scheme' => 'admin'
                         ), $atts));
-        return '<div  class="' . esc_attr($class) . '">'.'Admin Url &nbsp;'  .admin_url( $path,$scheme). '</div>'; 
+        return '<div  class="' . esc_attr($class) . '">'.'Admin Url: &nbsp;'  .admin_url( $path,$scheme). '</div>'; 
   	    
     }
     /**
      * user url
      * 
-     * [userurl]
+     * [userurl id=""]
      * 
      * @param type $atts
      * @return type
      */
-    public function user_url($atts){
+     public function user_url($atts){
         extract(shortcode_atts(array(
             'id'=>'',
             'class'=>'user-url',
@@ -482,12 +492,12 @@ class FPNEWShortCodes {
     /**
      * User links
      * 
-     * [userlink]
+     * [userlink id=""]
      * 
      * @param type $atts
      * @return type
      */
-    public function user_link($atts){
+     public function user_link($atts){
            extract(shortcode_atts(array(
                     'id' => '',
                     'class' => 'user-link',
@@ -498,10 +508,12 @@ class FPNEWShortCodes {
     /**
     * Network home url
     * 
+    * [networkhomeurl]
+    * 
     * @param type $atts
     * @return type
     */
-   public function network_home_url($atts){
+    public function network_home_url($atts){
         extract( shortcode_atts( array(
     		'path' => '',
                 'class'=>'network-home',
@@ -509,17 +521,19 @@ class FPNEWShortCodes {
     		
     	), $atts ) );
         
-     return '<div  class="' . esc_attr($class) . '">' .'Network Url &nbsp;' .network_home_url( $path , $scheme ). '</div>'; 
+     return '<div  class="' . esc_attr($class) . '">' .'Network Url: &nbsp;' .network_home_url( $path , $scheme ). '</div>'; 
     
         
     }
     /**
     * logout url
     * 
+    *[logout-url] 
+    * 
     * @param type $atts
     * @return type
     */
-   public function logout_url($atts){
+    public function logout_url($atts){
         
             extract(shortcode_atts(array(
                     'class' => 'logout-url',
@@ -530,6 +544,8 @@ class FPNEWShortCodes {
     }
     /**
     * login url
+    * 
+    * [login-url]
     * 
     * @param type $atts
     * @return type
@@ -544,10 +560,11 @@ class FPNEWShortCodes {
     /**
     * Recent posts
     * 
+    * [recent-posts]
     * @param type $atts
     * @return type
     */
-   public function recent_posts($atts){
+    public function recent_posts($atts){
         
         $query = new WP_Query(
                         array('orderby' => 'date', 'posts_per_page' => '5')
@@ -565,8 +582,6 @@ class FPNEWShortCodes {
 
         return $list . '</ul>';
     }
-    
- 
   
 }
 
