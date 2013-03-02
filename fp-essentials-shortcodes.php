@@ -39,6 +39,7 @@ class FPNEWShortCodes {
         add_shortcode('site-url',array($this,'site_url'));
         add_shortcode('site-link',array($this,'site_url'));
         add_shortcode('site-name',array($this,'bloginfo'));
+        
         add_shortcode('bloginfo',array($this,'bloginfo'));
         add_shortcode('blog-url', array($this,'blog_url'));
         add_shortcode('blog-link',array($this,'blog_url'));
@@ -543,7 +544,7 @@ class FPNEWShortCodes {
             extract(shortcode_atts(array(
                     'class' => 'login-url',
                         ), $atts));
-        return  wp_login_url(home_url()) ;
+        return  wp_login_url(site_url()) ;
     }
     /**
      * logout url
@@ -560,7 +561,7 @@ class FPNEWShortCodes {
                     'class' => 'logout-url',
                         ), $atts));
 
-        return  wp_logout_url(home_url());
+        return  wp_logout_url(site_url());
   
     }
    
