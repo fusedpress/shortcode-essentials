@@ -14,7 +14,7 @@ class FPNEWShortCodes {
     
     private static $instance;
 
-    function __construct() {
+    private function __construct() {
   
         //register shortcodes
         $this->register_shortcodes();
@@ -36,19 +36,21 @@ class FPNEWShortCodes {
       
         
         //show current site/Blog
-        add_shortcode('siteurl',array($this,'siteurl'));
-        add_shortcode('sitename',array($this,'bloginfo'));
+        add_shortcode('site-url',array($this,'site_url'));
+        add_shortcode('site-link',array($this,'site_url'));
+        add_shortcode('site-name',array($this,'bloginfo'));
         add_shortcode('bloginfo',array($this,'bloginfo'));
-        add_shortcode('blogurl', array($this,'blogurl'));
+        add_shortcode('blog-url', array($this,'blog_url'));
+        add_shortcode('blog-link',array($this,'blog_url'));
         add_shortcode('link-to-blog',array($this,'link_to_blog'));
         
         //Page url/link
-        add_shortcode('pageurl',array($this,'blogurl'));
-        add_shortcode('pagelink',array($this,'pagelink'));
+        add_shortcode('page-url',array($this,'blog_url'));
+        add_shortcode('page-link',array($this,'page_link'));
         
         //show post url/link
-        add_shortcode('posturl', array($this,'posturl'));
-        add_shortcode('postlink',array($this,'postlink'));
+        add_shortcode('post-url', array($this,'post_url'));
+        add_shortcode('post-link',array($this,'post_link'));
         
         //total post & draft posts
         add_shortcode('total-posts',array($this,'total_posts'));
@@ -66,14 +68,14 @@ class FPNEWShortCodes {
         add_shortcode('post-comments',array($this,'post_comments'));
         
         //admin url
-        add_shortcode('adminurl',array($this,'adminurl'));
+        add_shortcode('admin-url',array($this,'admin_url'));
         
         //user url/link
-        add_shortcode('userurl',array($this,'user_url'));
-        add_shortcode('userlink',array($this,'user_link'));
+        add_shortcode('user-url',array($this,'user_url'));
+        add_shortcode('user-link',array($this,'user_link'));
         
         //Network url
-        add_shortcode('networkhomeurl',array($this,'network_home_url'));
+        add_shortcode('network-home-url',array($this,'network_home_url'));
         
         // login /logout url
         add_shortcode('logout-url',array($this,'logout_url'));
@@ -117,7 +119,7 @@ class FPNEWShortCodes {
         if (is_user_logged_in() && !is_null($content)) {
 
             //now then return the content..... :)
-            return '<div  class="' . esc_attr($class) . '">' . $content . '</div>';
+            return '<div  class="' . esc_attr($class) . '">' .do_shortcode($content). '</div>';
         }
     }
     
@@ -139,20 +141,21 @@ class FPNEWShortCodes {
         if (!is_user_logged_in()) {
 
             //now then return content............ :)
-            return '<div  class="' . esc_attr($class) . '">' . $content . '</div>';
+            return '<div  class="' . esc_attr($class) . '">' . do_shortcode($content) . '</div>';
         }
     }
     
    /**
     * Show Current Site/Blog Url
     * 
-    * [siteurl]
+    * [site-url]
+    * <a href="[site-url]">Site link</a>
     * 
     * @param type $atts
     * @param type $content
     * @return string 
     */
-    public function siteurl($atts,$content=null){
+    public function site_url($atts,$content=null){
     
        extract(shortcode_atts(array(
                     "id" => '',
@@ -161,7 +164,7 @@ class FPNEWShortCodes {
         if ($id != '') {
             return get_permalink($id);
         }
-         return '<div  class="' . esc_attr($class) . '">'.'Site Url:&nbsp;' . get_bloginfo('url') . '</div>';
+         return  get_bloginfo('url') ;
        
     }
     /**
@@ -178,18 +181,18 @@ class FPNEWShortCodes {
                     "id" => '',
                     'class' => 'blog-info'), $atts));
            
-            return '<div  class="' . esc_attr($class) . '">'.'Blog Info: &nbsp;' . get_bloginfo( $atts ) . '</div>';
+            return  get_bloginfo( $atts ) ;
  
     }
     /**
      * Show Post Url
      * 
-     * [posturl id=""]
+     * [post-url id=""]
      * 
      * @param type $attsibutes
      * @return type
      */
-  public function posturl($atts,$content=null){
+  public function post_url($atts,$content=null){
         
         extract(shortcode_atts(array(
                     "id" => '',
@@ -199,20 +202,21 @@ class FPNEWShortCodes {
         $post_id = intval($atts['id']);
         $return_posturl = get_permalink($post_id);
         
-        return '<div  class="' . esc_attr($class) . '">' .'Post Url: &nbsp;'. $return_posturl . '</div>';
+        return $return_posturl ;
    
         
     }
    /**
     * Show blog/page url
     * 
-    * [blogurl]
-    * [pageurl id=""]
+    * [blog-url]
+    * <a href="[blog-link]">Blog link</a>
+    * [page-url id=""]
     * 
     * @param type $atts
     * @return type
     */
-   public function blogurl($atts) {
+   public function blog_url($atts) {
         
 	extract(shortcode_atts(array(
             "id" => '',
@@ -226,13 +230,13 @@ class FPNEWShortCodes {
 		if($temp){
 			return get_bloginfo('template_url');
 		}
-                return '<div  class="' . esc_attr($class) . '">' .get_bloginfo('url'). '</div>';
+                return get_bloginfo('url');
 		
     }
     /**
      * Link To Blog
      * 
-     * [link-to-blog id="3"]
+     * <ahref="[link-to-blog id="3"]">Link To Blog</a>
      * 
      * @param type $atts
      * @return type
@@ -243,53 +247,20 @@ class FPNEWShortCodes {
                     'class' => 'lonk-to-blog'
                         ), $atts));
         //$blog_id = 1;
-         return '<div  class="' . esc_attr($class) . '">' . 'Blog id. &nbsp; '.$id.' Name is called: &nbsp; '.get_blog_option( $id, 'siteurl ' ). '</div>';  
+         return get_blog_option( $id, 'siteurl ' );  
     }
-     /**
-     * Post Link
-     * 
-     * [postlink pid="1038" ]post link[/postlink]
+     
+        
+    /**
+     * Page link 
+     *   
+     * [page-link pageid="6"]Page link[/page-link]
      * 
      * @param type $atts
      * @param type $content
      * @return string
      */
-    public function postlink($atts,$content=null){
-        
-        extract(shortcode_atts(array(
-                    'class' => 'post-link',
-                    'pid' => null
-                        ), $atts));
-
-        // Return empty string if no post ID provided
-        if (!$pid) {
-            return '';
-        }
-
-        $permalink = get_permalink($pid);
-        // Return empty string if no permalink found
-        if (!$permalink) {
-            return ;
-        }
-
-        // Use the page/post title if no content provided
-        if (empty($content)) {
-            $content = get_the_title($pid);
-        }
-
-        return '<div>Post link: &nbsp;<a href="' . $permalink . '" class="' . esc_attr($class) . '">' . $content . '</a>'.'</div>';
-    }
-        
-    /**
-    * Page link 
-    *   
-    * [pagelink pageid="6"]Page link[/pagelink]
-    * 
-    * @param type $atts
-    * @param type $content
-    * @return string
-    */
-   public function pagelink($atts,$content=null){
+   public function page_link($atts,$content=null){
           extract(shortcode_atts(array(
                     'class' => 'page-link',
                     'pageid' => null
@@ -311,7 +282,7 @@ class FPNEWShortCodes {
             $content = get_the_title($pageid);
         }
 
-        return '<div>Page Link: &nbsp;<a href="' . $permalink . '" class="' . esc_attr($class) . '">' . $content . '</a>'.'</div>';
+        return '<a href="' . $permalink . '" class="' . esc_attr($class) . '">' . $content . '</a>';
      
     }
     /**
@@ -334,9 +305,40 @@ class FPNEWShortCodes {
            //echo '.';
         
         return '<div " class="' . esc_attr($class) . '">'.'There are  &nbsp;' . $count_users['total_users'].'&nbsp;Total users' .'&nbsp;,&nbsp;'.$count.'&nbsp;'.$role.''.'</div>';
-       
-    
-    
+    }
+    /**
+      * Post Link
+      * 
+      * [post-link pid="1038" ]post link[/post-link]
+      * 
+      * @param type $atts
+      * @param type $content
+      * @return string
+      */
+    public function post_link($atts,$content=null){
+        
+        extract(shortcode_atts(array(
+                    'class' => 'post-link',
+                    'pid' => null
+                        ), $atts));
+
+        // Return empty string if no post ID provided
+        if (!$pid) {
+            return '';
+        }
+
+        $permalink = get_permalink($pid);
+        // Return empty string if no permalink found
+        if (!$permalink) {
+            return ;
+        }
+
+        // Use the page/post title if no content provided
+        if (empty($content)) {
+            $content = get_the_title($pid);
+        }
+
+        return '<a href="' . $permalink . '" class="' . esc_attr($class) . '">' . $content . '</a>';
     }
    /**
     * Show total posts
@@ -357,12 +359,12 @@ class FPNEWShortCodes {
         
         }
     /**
-    * Total Posts(Drafts)
-    * 
-    *[draft-posts] 
-    * 
-    * @return type
-    */
+     * Total Posts(Drafts)
+     * 
+     *[draft-posts] 
+     * 
+     * @return type
+     */
     public function draft_posts($atts,$content=null){
         
         extract(shortcode_atts(array(
@@ -375,11 +377,11 @@ class FPNEWShortCodes {
         return '<div  class="' . esc_attr($class) . '">' . 'Total drafts posts: &nbsp; &nbsp;' . $count_drafts->draft . '</div>';
     }
     /**
-    * Total Comments
-    * 
-    * [comments]
-    * @return type
-    */
+     * Total Comments
+     * 
+     * [comments]
+     * @return type
+     */
     public function comments($atts,$content=null){
         
           extract(shortcode_atts(array(
@@ -392,15 +394,15 @@ class FPNEWShortCodes {
         return '<div  class="' . esc_attr($class) . '">' . 'Total Comments on this site is &nbsp; &nbsp;' . $count_comments->total_comments . '</div>';
     }
     /**
-    * post comment 
-    * 
-    * show particular comments on a single post
-    * 
-    * [post-comments id=""]
-    * 
-    * @param type $atts
-    * @return type
-    */
+     * post comment 
+     * 
+     * show particular comments on a single post
+     * 
+     * [post-comments id=""]
+     * 
+     * @param type $atts
+     * @return type
+     */
       public function post_comments($atts){
         extract(shortcode_atts(array(
                     'id' => ''
@@ -419,12 +421,12 @@ class FPNEWShortCodes {
 
     }
     /**
-    * Total comments(Moderates)
-    * 
-    * [moderated]
-    * 
-    * @return type
-    */
+     * Total comments(Moderates)
+     * 
+     * [moderated]
+     * 
+     * @return type
+     */
      public function moderated_comments($atts,$content=null){
         
           extract(shortcode_atts(array(
@@ -438,12 +440,12 @@ class FPNEWShortCodes {
          
     }
     /**
-    * Total comments(approved)
-    * 
-    * [approved]
-    * 
-    * @return type
-    */
+     * Total comments(approved)
+     * 
+     * [approved]
+     * 
+     * @return type
+     */
     public function approved_comments ($atts,$content=null){
         
          extract(shortcode_atts(array(
@@ -458,11 +460,13 @@ class FPNEWShortCodes {
     }
     /**
      * Admin Url
-     * [adminurl]
+     * 
+     * [admin-url]
+     * 
      * @param type $atts
      * @return type
      */
-     public function adminurl($atts){
+     public function admin_url($atts){
         
         extract(shortcode_atts(array(
                     'path' => '',
@@ -475,7 +479,7 @@ class FPNEWShortCodes {
     /**
      * user url
      * 
-     * [userurl id=""]
+     * [user-url id=""]
      * 
      * @param type $atts
      * @return type
@@ -492,7 +496,7 @@ class FPNEWShortCodes {
     /**
      * User links
      * 
-     * [userlink id=""]
+     * [user-link id=""]
      * 
      * @param type $atts
      * @return type
@@ -503,16 +507,16 @@ class FPNEWShortCodes {
                     'class' => 'user-link',
                         ), $atts));
            
-        return '<div  class="' . esc_attr($class) . '">'.'Usre Link &nbsp;'  .bp_core_get_userlink( $id ). '</div>'; 
+        return bp_core_get_userlink( $id ); 
     }
     /**
-    * Network home url
-    * 
-    * [networkhomeurl]
-    * 
-    * @param type $atts
-    * @return type
-    */
+     * Network home url
+     * 
+     * [network-home-url]
+     * 
+     * @param type $atts
+     * @return type
+     */
     public function network_home_url($atts){
         extract( shortcode_atts( array(
     		'path' => '',
@@ -525,15 +529,32 @@ class FPNEWShortCodes {
     
         
     }
+     /**
+     * login url
+     * 
+     * use this to get login url......[login-url]
+     * use this to get login link.....<a href="[login-url]">login link</a>.
+     * 
+     * @param type $atts
+     * @return type
+     */
+    public function login_url($atts,$content=null){
+        
+            extract(shortcode_atts(array(
+                    'class' => 'login-url',
+                        ), $atts));
+        return  wp_login_url(home_url()) ;
+    }
     /**
-    * logout url
-    * 
-    *[logout-url] 
-    * 
-    * @param type $atts
-    * @return type
-    */
-    public function logout_url($atts){
+     * logout url
+     * 
+     * Use this to take logout url .....[logout-url] 
+     * use this to get logout link.....<a href="[logout-url]">logout link</a>.
+     * 
+     * @param type $atts
+     * @return type
+     */
+    public function logout_url($atts,$content=null){
         
             extract(shortcode_atts(array(
                     'class' => 'logout-url',
@@ -542,28 +563,14 @@ class FPNEWShortCodes {
         return  wp_logout_url(home_url());
   
     }
+   
     /**
-    * login url
-    * 
-    * [login-url]
-    * 
-    * @param type $atts
-    * @return type
-    */
-    public function login_url($atts){
-        
-            extract(shortcode_atts(array(
-                    'class' => 'login-url',
-                        ), $atts));
-        return  wp_login_url(home_url()) ;
-    }
-    /**
-    * Recent posts
-    * 
-    * [recent-posts]
-    * @param type $atts
-    * @return type
-    */
+     * Recent posts
+     * 
+     * [recent-posts]
+     * @param type $atts
+     * @return type
+     */
     public function recent_posts($atts){
         
         $query = new WP_Query(
